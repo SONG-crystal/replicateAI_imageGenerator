@@ -1,0 +1,40 @@
+<!--templates/index.html-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI</title>
+  </head>
+  <body>
+    <h2>AI</h2>
+    <input type="file" id="imgInput" accept="image/*" />
+    <button onclick="uploadImage()">transfer</button>
+    <br /><br />
+    <img id="result" style="max-width:300px;" />
+    
+    <script>
+      async function uploadImage() {
+        const file = document.getElementById("imgInput").files[0];
+        if (!file) {
+          alert("choose your image.");
+          return;
+        }
+        const formData = new FormData();
+        formData.append("image", file);
+        
+        const res = await fetch("/upload", {
+          method: "POST",
+          body: formData,
+        });
+        
+        const data = await res.json();
+        if (data.error) {
+          alert(data.error);
+          return;
+        }
+        document.getElementById("result").src = data.result_url;
+      }
+    </script>
+  </body>
+</html>
